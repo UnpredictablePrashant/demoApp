@@ -13,12 +13,12 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Runnins commands on runner machine
-      run: |
-        echo "hello"
-        ls -al
-        pwd
-        touch hello.txt
+    # - name: Runnins commands on runner machine
+    #   run: |
+    #     echo "hello"
+    #     ls -al
+    #     pwd
+    #     touch hello.txt
 
     - name: Sending files to the server
       uses: appleboy/scp-action@v0.1.7
@@ -29,3 +29,13 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         source: ./
         target: /home/ubuntu
+
+    - name: COPY files from /home/ubuntu to /var/www/html
+      uses: appleboy/ssh-action@v1.1.0
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.PORT }}
+        script: |
+          sudo cp -rf /home/ubuntu/* /var/www/html
